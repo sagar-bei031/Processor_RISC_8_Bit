@@ -114,10 +114,11 @@ In data processing, the four LSB bits are assigned to ALU control.
 - **Processor Testbench**
 
 ### ALU Testbench Simulation
+``Fig: ALU Testbench Simulation Waveform``:
 ![Fig: ALU Testbench Simulation Waveform](images/simulation/ALU_tb.png)
 
 ### Instruction Memory Testbench Simulation
-``instruction_memory.mem``
+``instruction_memory.mem``:
 ```txt
 81_01_05_00 // R1 <- 05
 81_02_06_00 // R2 <- 06
@@ -132,10 +133,11 @@ In data processing, the four LSB bits are assigned to ALU control.
 82_05_05_00 // M[0005] <- R5
 ```
 
+``Fig: Instruction Memory Testbench Simulation Waveform``:
 ![Fig: Instruction Memory Testbench Simulation Waveform](images/simulation/InstructionMemory_tb.png)
 
 ### Data Memory Testbench Simulation
-``data_memory.mem``
+``data_memory.mem``:
 ```txt
 01
 02
@@ -149,9 +151,10 @@ In data processing, the four LSB bits are assigned to ALU control.
 00
 ```
 
+``Fig: Data Memory Testbench Simulation Waveform``:
 ![Fig: Data Memory Testbench Simulation Waveform](images/simulation/DataMemory_tb.png)
 
-``data_memory_dumped.txt``
+``data_memory_dumped.txt``:
 ```
 mem[0] = aa
 mem[1] = bb
@@ -177,9 +180,10 @@ mem[15] = xx
 
 ``instruction_memory.mem`` and ``data_memory.mem`` are same as previous.
 
+``Fig: Processor Testbench Simulation Waveform``:
 ![Fig: Processor Testbench Simulation Waveform](images/simulation/Processor_tb.png)
 
-``data_memory_dumped.txt``
+``data_memory_dumped.txt``:
 ```txt
 mem[0] = 00
 mem[1] = 05
@@ -201,7 +205,7 @@ mem[f] = xx
 
 **Jump Instruction Test**:
 
-``instruction_memory.mem``
+``instruction_memory.mem``:
 ```txt
 // To find the maximum of two number from data memory at address 0000H and 00001H and store the max value into data memory at address 0002H.
 80_02_00_00 // 00: R2 <- M[0000H]; load from data memory
@@ -215,12 +219,13 @@ mem[f] = xx
 
 ```
 
-``data_memory.mem``
+``data_memory.mem``:
 ```txt
 02
 01
 ```
 
+``Fig: Processor Testbench Simulation Waveform for Jump``:
 ![Fig: Processor Testbench Simulation Waveform for Jump](images/simulation/Processor_tb_jmp.png)
 
 ``data_memory_dumped.txt``:
