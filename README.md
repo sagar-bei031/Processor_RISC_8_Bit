@@ -6,7 +6,7 @@ A simple and minimal RISC style 8-bit processor using verilog and AMD Vivado.
 ## Design
 
 ### Generic Block Diagram
-![Fig: Generic Block Diagram of Processor](images/diagram/Generic_Block_Diagram_of_Processor.png)
+![Fig: Generic Block Diagram of Processor](images/diagram/Processor.png)
 
 ### Top Level Netlist Schematic
 ![Fig: Top Level Netlist Schematic](images/diagram/Netlist_Schematic.png)
