@@ -72,14 +72,14 @@ In data processing, the four LSB bits are assigned to ALU control.
 | 1000_0010 (82H) | Store direct          | Source register address      | Lower data memory address | Higher data memory address |
 | 1000_0011 (83H) | Store immediate       | Source register address      | Immediate value           | Don't care                 |
 | 0100_0000 (40H) | Uncondtinal jump      | Don't care                   | Lower instruction address | Higher instruction address |
-| 0110_0001 (61H) | Jump on zero (Z flag) | Don't care                   | Lower instruction address | Lower instruction address  |
-| 0110_0010 (62H) | Jump on divided by zero (D flag)  | Don't care       | Lower instruction address | Lower instruction address  |
-| 0110_0011 (63H) | Jump on carry (C flag)            | Don't care       | Lower instruction address | Lower instruction address  |
-| 0110_0100 (64H) | Jump on negative (S flag)         | Don't care       | Lower instruction address | Lower instruction address  |
-| 0111_0001 (71H) | Jump on not zero (!Z)             | Don't care       | Lower instruction address | Lower instruction address  |
-| 0111_0010 (72H) | Jump on not divided by zero (!D)  | Don't care       | Lower instruction address | Lower instruction address  |
-| 0111_0011 (73H) | Jump on not carrry (!C)           | Don't care       | Lower instruction address | Lower instruction address  |
-| 0111_0100 (74H) | Jump on not negative (!S)         | Don't care       | Lower instruction address | Lower instruction address  |
+| 0110_0001 (61H) | Jump on zero (Z flag) | Don't care                   | Lower instruction address | Higher instruction address |
+| 0110_0010 (62H) | Jump on divided by zero (D flag)  | Don't care       | Lower instruction address | Higher instruction address |
+| 0110_0011 (63H) | Jump on carry (C flag)            | Don't care       | Lower instruction address | Higher instruction address |
+| 0110_0100 (64H) | Jump on negative (S flag)         | Don't care       | Lower instruction address | Higher instruction address |
+| 0111_0001 (71H) | Jump on not zero (!Z)             | Don't care       | Lower instruction address | Higher instruction address |
+| 0111_0010 (72H) | Jump on not divided by zero (!D)  | Don't care       | Lower instruction address | Higher instruction address |
+| 0111_0011 (73H) | Jump on not carrry (!C)           | Don't care       | Lower instruction address | Higher instruction address |
+| 0111_0100 (74H) | Jump on not negative (!S)         | Don't care       | Lower instruction address | Higher instruction address |
 | 0000_0000 (00H) | No operation          | Don't care                   | Don't care                | Don't care                 |
 | 0000_0001 (01H) | Add                   | Destination register address | Source 1 register address | Source 2 register address  |
 | 0000_0010 (02H) | Subtract              | Destination register address | Source 1 register address | Source 2 register address  |
@@ -214,7 +214,7 @@ mem[f] = xx
 02_04_02_03 // 02: R4 <- R2 - R3; if there is carry, R3 is greater than R2 else R2 is greater than or equal to R3
 63_00_06_00 // 03: PC <- 0006H; if carry
 01_01_02_00 // 04: R1 <- R2 + R0; no carry, so R2 is greater and move to R1 (R0 is always 0)
-40_00_07_00 // 05: jump to store into data memory
+40_00_07_00 // 05: PC <- 0007H; jump to store into data memory
 01_01_03_00 // 06: R1 <- R3 + R0; carry, so R3 is greater and move to R1
 82_01_02_00 // 07: M[0002H] <- R1; store maximum value into data memory
 C0_00_00_00 // 08: PC <- PC; Halt

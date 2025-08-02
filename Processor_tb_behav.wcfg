@@ -12,12 +12,12 @@
    </db_ref_list>
    <zoom_setting>
       <ZoomStartTime time="0.000 ns"></ZoomStartTime>
-      <ZoomEndTime time="120.000 ns"></ZoomEndTime>
+      <ZoomEndTime time="89.083 ns"></ZoomEndTime>
       <Cursor1Time time="120.000 ns"></Cursor1Time>
    </zoom_setting>
    <column_width_setting>
       <NameColumnWidth column_width="228"></NameColumnWidth>
-      <ValueColumnWidth column_width="102"></ValueColumnWidth>
+      <ValueColumnWidth column_width="96"></ValueColumnWidth>
    </column_width_setting>
    <WVObjectSize size="18" />
    <wvobject fp_name="/Processor_tb/clk" type="logic">
@@ -48,13 +48,13 @@
       <obj_property name="ElementShortName">jmp_reg</obj_property>
       <obj_property name="ObjectShortName">jmp_reg</obj_property>
    </wvobject>
-   <wvobject fp_name="/Processor_tb/data_bus_write_enable" type="logic">
-      <obj_property name="ElementShortName">data_bus_write_enable</obj_property>
-      <obj_property name="ObjectShortName">data_bus_write_enable</obj_property>
-   </wvobject>
    <wvobject fp_name="/Processor_tb/processor_ins/cu_inst/hlt_reg" type="logic">
       <obj_property name="ElementShortName">hlt_reg</obj_property>
       <obj_property name="ObjectShortName">hlt_reg</obj_property>
+   </wvobject>
+   <wvobject fp_name="/Processor_tb/data_bus_write_enable" type="logic">
+      <obj_property name="ElementShortName">data_bus_write_enable</obj_property>
+      <obj_property name="ObjectShortName">data_bus_write_enable</obj_property>
    </wvobject>
    <wvobject fp_name="/Processor_tb/data_addr_bus" type="array">
       <obj_property name="ElementShortName">data_addr_bus[15:0]</obj_property>
