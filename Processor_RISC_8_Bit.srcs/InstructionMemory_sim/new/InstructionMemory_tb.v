@@ -11,11 +11,17 @@ module InstructionMemory_tb;
     );
 
     initial begin
-        #20 inst_addr_bus = 16'd0;
-        #20 inst_addr_bus = 16'd1;
-        #20 inst_addr_bus = 16'd2;
-        #20 inst_addr_bus = 16'd3;
-        #20 $finish;
+        #10 inst_addr_bus = 16'd0;
+        #10 inst_addr_bus = 16'd1;
+        #10 inst_addr_bus = 16'd2;
+        #10 inst_addr_bus = 16'd3;
+        #10 inst_addr_bus = 16'd4;
+        #10 inst_addr_bus = 16'd5;
+        #10 inst_addr_bus = 16'd6;
+        #10 inst_addr_bus = 16'd7;
+        #10 inst_addr_bus = 16'd8;
+        #10 inst_addr_bus = 16'd9;
+        #10 $finish;
     end
 
 endmodule

@@ -6,7 +6,7 @@ module ALU (
     input [3:0] control,
     input [7:0] input_A, input_B,
     output [7:0] result,
-    output [3:0] flag
+    output [3:0] flag // [S, C, D, Z]
 );
 
 reg [7:0] result_reg;
@@ -20,7 +20,6 @@ always @(*) begin
         // reset result and flag 
         4'h0: begin
             result_reg = 0;
-            flag_reg = 0;
         end
     
         // add
