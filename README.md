@@ -14,8 +14,8 @@ A simple and minimal RISC style 8-bit processor using verilog and AMD Vivado.
 
 ## Design Modules
 
-### Arithmetic and Logic Unit (ALU)
-ALU performs the following arithmetic and logical operations:
+### Arithmetic Logic Unit (ALU)
+ALU performs the following arithmetic and logic operations:
 
 | ALU Control | Operation    | Result      |
 |-------------|--------------|-------------|
@@ -91,6 +91,7 @@ In data processing, the four LSB bits are assigned to ALU control.
 | 0000_1000 (08H) | Shift Left            | Destination register address | Source 1 register address | Source 2 register address  |
 | 0000_1001 (09H) | Shift Right           | Destination register address | Source 1 register address | Source 2 register address  |
 | 0000_1111 (0FH) | Reset flag (0001)     | Don't care                   | Don't care                | Don't care                 |
+| 1100_0000 (C0H) | Halt                  | Don't care                   | Don't care                | Don't care                 |
 
 ### Jump Instruction Types
 | Opcode    | Jump Type                          |
@@ -216,6 +217,7 @@ mem[f] = xx
 40_00_07_00 // 05: jump to store into data memory
 01_01_03_00 // 06: R1 <- R3 + R0; carry, so R3 is greater and move to R1
 82_01_02_00 // 07: M[0002H] <- R1; store maximum value into data memory
+C0_00_00_00 // 08: PC <- PC; Halt
 ```
 
 ``data_memory.mem``:

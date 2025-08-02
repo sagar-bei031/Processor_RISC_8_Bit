@@ -1,9 +1,10 @@
 // To find the maximum of two number from data memory at address 0000H and 00001H and store the max value into data memory at address 0002H.
 80_02_00_00 // 00: R2 <- M[0000H]; load from data memory
 80_03_01_00 // 01: R3 <- M[0001H]; load from data memory
-02_04_02_03 // 02: R4 <- R2 - R3; if there is carry, R3 is greater than R2 else R2 is greater than or equal to R2
+02_04_02_03 // 02: R4 <- R2 - R3; if there is carry, R3 is greater than R2 else R2 is greater than or equal to R3
 63_00_06_00 // 03: PC <- 0006H; if carry
 01_01_02_00 // 04: R1 <- R2 + R0; no carry, so R2 is greater and move to R1 (R0 is always 0)
 40_00_07_00 // 05: jump to store into data memory
 01_01_03_00 // 06: R1 <- R3 + R0; carry, so R3 is greater and move to R1
 82_01_02_00 // 07: M[0002H] <- R1; store maximum value into data memory
+C0_00_00_00 // 08: PC <- PC; Halt

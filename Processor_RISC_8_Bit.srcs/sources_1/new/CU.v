@@ -25,6 +25,7 @@ module CU (
 
     reg [15:0] pc, jmp_pc;
     reg jmp_reg;
+    reg hlt_reg;
 
     reg [7:0] opcode, operand0, operand1, operand2;  // decoded instruction parts
     
@@ -67,6 +68,7 @@ module CU (
             data_bus_write_enable_reg = 1'b0;
             rf_write_enable_reg = 1'b0;
             jmp_reg = 1'b0;
+            hlt_reg = 1'b0;
             alu_control_reg = 4'hf;
         end else begin
             // decode instruction
@@ -85,6 +87,7 @@ module CU (
                     data_bus_write_enable_reg = 1'b0;
                     rf_write_enable_reg = 1'b1;
                     jmp_reg = 1'b0;
+                    hlt_reg = 1'b0;
                         
                     // read from data memory 
                     data_addr_bus_reg = {operand2, operand1};
@@ -311,6 +314,16 @@ module CU (
                     rf_input_data_reg = alu_result;
                 end
                 
+                // halt
+                // opcode = hlt
+                // others = XX
+                8'b1100_0000: begin
+                    data_bus_write_enable_reg = 1'b0;
+                    rf_write_enable_reg = 1'b0;
+                    jmp_reg = 1'b0;
+                    hlt_reg = 1'b1;
+                end
+                
                 default: begin
                     data_bus_write_enable_reg = 1'b0;
                     rf_write_enable_reg = 1'b0;
@@ -324,12 +337,12 @@ module CU (
     always @(posedge clk or posedge rst) begin
         if (rst)
             pc <= 16'hffff;
-        else begin            
-            if (jmp_reg)
-                pc <= jmp_pc;
-            else
-                pc <= pc + 1;
-        end
+        else if (hlt_reg)
+            pc <= pc;        
+        else if (jmp_reg)
+            pc <= jmp_pc;
+        else
+            pc <= pc + 1;
     end
 
 endmodule
