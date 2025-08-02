@@ -24,7 +24,7 @@ module CU (
 );
 
     reg [15:0] pc, jmp_pc;
-    reg jmp;
+    reg jmp_reg;
 
     reg [7:0] opcode, operand0, operand1, operand2;  // decoded instruction parts
     
@@ -66,7 +66,7 @@ module CU (
         if (rst) begin
             data_bus_write_enable_reg = 1'b0;
             rf_write_enable_reg = 1'b0;
-            jmp = 0;
+            jmp_reg = 1'b0;
             alu_control_reg = 4'hf;
         end else begin
             // decode instruction
@@ -84,6 +84,7 @@ module CU (
                 8'b1000_0000: begin
                     data_bus_write_enable_reg = 1'b0;
                     rf_write_enable_reg = 1'b1;
+                    jmp_reg = 1'b0;
                         
                     // read from data memory 
                     data_addr_bus_reg = {operand2, operand1};
@@ -100,6 +101,7 @@ module CU (
                 8'b1000_0001: begin
                     data_bus_write_enable_reg = 1'b0;
                     rf_write_enable_reg = 1'b1;
+                    jmp_reg = 1'b0;
                 
                     // write on register file
                     rf_write_addr_reg = operand0[3:0];
@@ -114,6 +116,7 @@ module CU (
                 8'b1000_0010: begin
                     data_bus_write_enable_reg = 1'b1;
                     rf_write_enable_reg = 1'b0;
+                    jmp_reg = 1'b0;
                         
                     // read data from src register
                     rf_read_addr1_reg = operand0;
@@ -130,6 +133,7 @@ module CU (
                 8'b1000_0011: begin
                     data_bus_write_enable_reg = 1'b1;
                     rf_write_enable_reg = 1'b0;
+                    jmp_reg = 1'b0;
                 
                     // write immediate to data memory
                     data_addr_bus_reg = {operand2, operand1};
@@ -143,10 +147,10 @@ module CU (
                 8'b0100_0000: begin
                     data_bus_write_enable_reg = 1'b0;
                     rf_write_enable_reg = 1'b0;
+                    jmp_reg = 1'b1;
                     
                     // jump address
                     jmp_pc = {operand2, operand1};
-                    jmp = 1'b1;
                 end
                 
                 // jump on zero
@@ -160,9 +164,9 @@ module CU (
                     // read registers
                     if (alu_flag[`Zflag]) begin
                         jmp_pc = {operand2, operand1};
-                        jmp = 1'b1;
+                        jmp_reg = 1'b1;
                     end else begin
-                        jmp = 1'b0;
+                        jmp_reg = 1'b0;
                     end   
                 end
                 
@@ -177,9 +181,9 @@ module CU (
                     // read registers
                     if (alu_flag[`Dflag]) begin
                         jmp_pc = {operand2, operand1};
-                        jmp = 1'b1;
+                        jmp_reg = 1'b1;
                     end else begin
-                        jmp = 1'b0;
+                        jmp_reg = 1'b0;
                     end   
                 end
                 
@@ -194,9 +198,9 @@ module CU (
                     // read registers
                     if (alu_flag[`Cflag]) begin
                         jmp_pc = {operand2, operand1};
-                        jmp = 1'b1;
+                        jmp_reg = 1'b1;
                     end else begin
-                        jmp = 1'b0;
+                        jmp_reg = 1'b0;
                     end   
                 end
                 
@@ -211,9 +215,9 @@ module CU (
                     // read registers
                     if (alu_flag[`Sflag]) begin
                         jmp_pc = {operand2, operand1};
-                        jmp = 1'b1;
+                        jmp_reg = 1'b1;
                     end else begin
-                        jmp = 1'b0;
+                        jmp_reg = 1'b0;
                     end   
                 end
                 
@@ -228,9 +232,9 @@ module CU (
                     // read registers
                     if (!alu_flag[`Zflag]) begin
                         jmp_pc = {operand2, operand1};
-                        jmp = 1'b1;
+                        jmp_reg = 1'b1;
                     end else begin
-                        jmp = 1'b0;
+                        jmp_reg = 1'b0;
                     end   
                 end
                 
@@ -245,9 +249,9 @@ module CU (
                     // read registers
                     if (!alu_flag[`Dflag]) begin
                         jmp_pc = {operand2, operand1};
-                        jmp = 1'b1;
+                        jmp_reg = 1'b1;
                     end else begin
-                        jmp = 1'b0;
+                        jmp_reg = 1'b0;
                     end   
                 end
                 
@@ -262,9 +266,9 @@ module CU (
                     // read registers
                     if (!alu_flag[`Cflag]) begin
                         jmp_pc = {operand2, operand1};
-                        jmp = 1'b1;
+                        jmp_reg = 1'b1;
                     end else begin
-                        jmp = 1'b0;
+                        jmp_reg = 1'b0;
                     end   
                 end
                 
@@ -279,9 +283,9 @@ module CU (
                     // read registers
                     if (!alu_flag[`Sflag]) begin
                         jmp_pc = {operand2, operand1};
-                        jmp = 1'b1;
+                        jmp_reg = 1'b1;
                     end else begin
-                        jmp = 1'b0;
+                        jmp_reg = 1'b0;
                     end   
                 end
                 
@@ -293,6 +297,7 @@ module CU (
                 8'b0000_xxxx: begin
                     data_bus_write_enable_reg = 1'b0;
                     rf_write_enable_reg = 1'b1;
+                    jmp_reg = 1'b0;
                     
                     // set read and write addresses of registers
                     rf_read_addr1_reg = operand1;
@@ -309,6 +314,7 @@ module CU (
                 default: begin
                     data_bus_write_enable_reg = 1'b0;
                     rf_write_enable_reg = 1'b0;
+                    jmp_reg = 1'b0;
                  end
             endcase
         end
@@ -319,7 +325,7 @@ module CU (
         if (rst)
             pc <= 16'hffff;
         else begin            
-            if (jmp && opcode[6])
+            if (jmp_reg)
                 pc <= jmp_pc;
             else
                 pc <= pc + 1;

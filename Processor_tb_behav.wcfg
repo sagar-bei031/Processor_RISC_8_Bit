@@ -12,14 +12,14 @@
    </db_ref_list>
    <zoom_setting>
       <ZoomStartTime time="0.000 ns"></ZoomStartTime>
-      <ZoomEndTime time="120.000 ns"></ZoomEndTime>
-      <Cursor1Time time="21.725 ns"></Cursor1Time>
+      <ZoomEndTime time="120.001 ns"></ZoomEndTime>
+      <Cursor1Time time="120.000 ns"></Cursor1Time>
    </zoom_setting>
    <column_width_setting>
-      <NameColumnWidth column_width="247"></NameColumnWidth>
-      <ValueColumnWidth column_width="95"></ValueColumnWidth>
+      <NameColumnWidth column_width="228"></NameColumnWidth>
+      <ValueColumnWidth column_width="108"></ValueColumnWidth>
    </column_width_setting>
-   <WVObjectSize size="15" />
+   <WVObjectSize size="17" />
    <wvobject fp_name="/Processor_tb/clk" type="logic">
       <obj_property name="ElementShortName">clk</obj_property>
       <obj_property name="ObjectShortName">clk</obj_property>
@@ -39,6 +39,14 @@
    <wvobject fp_name="/Processor_tb/data_bus" type="array">
       <obj_property name="ElementShortName">data_bus[7:0]</obj_property>
       <obj_property name="ObjectShortName">data_bus[7:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/Processor_tb/processor_ins/cu_inst/jmp_pc" type="array">
+      <obj_property name="ElementShortName">jmp_pc[15:0]</obj_property>
+      <obj_property name="ObjectShortName">jmp_pc[15:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/Processor_tb/processor_ins/cu_inst/jmp_reg" type="logic">
+      <obj_property name="ElementShortName">jmp_reg</obj_property>
+      <obj_property name="ObjectShortName">jmp_reg</obj_property>
    </wvobject>
    <wvobject fp_name="/Processor_tb/data_bus_write_enable" type="logic">
       <obj_property name="ElementShortName">data_bus_write_enable</obj_property>
