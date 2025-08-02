@@ -46,6 +46,7 @@ integer i;
         rst = 1;
         #10 rst = 0;
         
+        // enough to complete all instructions
         #100;
         file_id = $fopen(`DATA_MEMORY_DUMPED_FILE, "w");
         for (i = 0; i < 16; i = i + 1) begin

@@ -19,7 +19,7 @@ ALU performs the following arithmetic and logical operations:
 
 | ALU Control | Operation    | Result      |
 |-------------|--------------|-------------|
-| 00H         | Reset        | 0           |
+| 00H         | No operation | Don't care  |
 | 01H         | Add          | A + B       |
 | 02H         | Subtract     | A - B       |
 | 03H         | Multiply     | A * B       |
@@ -29,21 +29,18 @@ ALU performs the following arithmetic and logical operations:
 | 07H         | XOR          | A ^ B       |
 | 08H         | Shift Left   | A << B      |
 | 09H         | Shift Right  | A >> B      |
+| FFH         | Reset flag   | 0           |
 
 The ALU affects four bit flag register.
 
 ![Fig: Four Bit Flag Register](images/diagram/Flag.png)
 
 - **Sign Flag [S]**: It is set when MSB of result is 1 repressing as negative signed value.
-
-- **Carry Flag [C]**: It is set if there is carry during addition or borrow during substraction. 
-
+- **Carry Flag [C]**: It is set if there is carry during addition or borrow during substraction.
 - **Devided by Zero Flag [D]**: It is set if divider is zero.
-
 - **Zero**: It is set if result is zero.
 
-- **Register File**: Contains registers for storing data and instructions.
-- **Control Unit**: Decodes instructions and generates control signals.
+Every flag is affected in every ALU operations except NOP.
 
 ### Register File
 Register file contains eight registers (R0-R7) of 8-bit. Two registers can be read and one register can be written at the same time. The value of register R0 is always zero which help in move operation via ALU.
@@ -58,6 +55,7 @@ Control unit controls the signals such as ALU control, address buses, reset, wri
 
 One instruction size is four bytes containing 8-bit opcode and three 8-bit operands. CU performs operation according to opcode. In this processor, there are three types of operation which are as follows:
 
+### Operation Types
 | Opcode    | Operation Type              |
 |-----------|-----------------------------|
 | 10XX_XXXX | Load and store register     |
@@ -66,7 +64,8 @@ One instruction size is four bytes containing 8-bit opcode and three 8-bit opera
 
 In data processing, the four LSB bits are assigned to ALU control.
 
-| Opcode          | Operation             | Operand 0                    | Operand1                  | Operand2                   |
+### Instruction Table
+| Opcode          | Operation                    | Operand 0                    | Operand1                  | Operand2                   |
 |-----------------|-----------------------|------------------------------|---------------------------|----------------------------|
 | 1000_0000 (80H) | Load direct           | Destination register address | Lower data memory address | Higher data memory address |
 | 1000_0001 (81H) | Load immediate        | Destination register address | Immediate value           | Don't care                 |
@@ -74,8 +73,14 @@ In data processing, the four LSB bits are assigned to ALU control.
 | 1000_0011 (83H) | Store immediate       | Source register address      | Immediate value           | Don't care                 |
 | 0100_0000 (40H) | Uncondtinal jump      | Don't care                   | Lower instruction address | Higher instruction address |
 | 0110_0001 (61H) | Jump on zero (Z flag) | Don't care                   | Lower instruction address | Lower instruction address  |
-| 0111_0010 (72H) | Jump on not zero (!Z) | Don't care                   | Lower instruction address | Lower instruction address  |
-| 0000_0000 (00H) | Reset ALU (flag=0001) | Don't care                   | Don't care                | Don't care                 |
+| 0110_0010 (62H) | Jump on divided by zero (D flag)  | Don't care       | Lower instruction address | Lower instruction address  |
+| 0110_0011 (63H) | Jump on carry (C flag)            | Don't care       | Lower instruction address | Lower instruction address  |
+| 0110_0100 (64H) | Jump on negative (S flag)         | Don't care       | Lower instruction address | Lower instruction address  |
+| 0111_0001 (71H) | Jump on not zero (!Z)             | Don't care       | Lower instruction address | Lower instruction address  |
+| 0111_0010 (72H) | Jump on not divided by zero (!D)  | Don't care       | Lower instruction address | Lower instruction address  |
+| 0111_0011 (73H) | Jump on not carrry (!C)           | Don't care       | Lower instruction address | Lower instruction address  |
+| 0111_0100 (74H) | Jump on not negative (!S)         | Don't care       | Lower instruction address | Lower instruction address  |
+| 0000_0000 (00H) | No operation          | Don't care                   | Don't care                | Don't care                 |
 | 0000_0001 (01H) | Add                   | Destination register address | Source 1 register address | Source 2 register address  |
 | 0000_0010 (02H) | Subtract              | Destination register address | Source 1 register address | Source 2 register address  |
 | 0000_0011 (03H) | Multiply              | Destination register address | Source 1 register address | Source 2 register address  |
@@ -85,7 +90,9 @@ In data processing, the four LSB bits are assigned to ALU control.
 | 0000_0111 (07H) | XOR                   | Destination register address | Source 1 register address | Source 2 register address  |
 | 0000_1000 (08H) | Shift Left            | Destination register address | Source 1 register address | Source 2 register address  |
 | 0000_1001 (09H) | Shift Right           | Destination register address | Source 1 register address | Source 2 register address  |
+| 0000_1111 (0FH) | Reset flag (0001)     | Don't care                   | Don't care                | Don't care                 |
 
+### Jump Instruction Types
 | Opcode    | Jump Type                          |
 |-----------|------------------------------------|
 | 0100_XXXX | Unconditional jump                 |
@@ -165,6 +172,9 @@ mem[15] = xx
 ```
 
 ### Processor Testbench Simulation
+
+**Load, Store and Data Processing Test**:
+
 ``instruction_memory.mem`` and ``data_memory.mem`` are same as previous.
 
 ![Fig: Processor Testbench Simulation Waveform](images/simulation/Processor_tb.png)
@@ -189,5 +199,46 @@ mem[e] = xx
 mem[f] = xx
 ```
 
-## Note
-It jump instruction is still on testing phase.
+**Jump Instruction Test**:
+
+``instruction_memory.mem``
+```txt
+// To find the maximum of two number from data memory at address 0000H and 00001H and store the max value into data memory at address 0002H.
+80_02_00_00 // 00: R2 <- M[0000H]; load from data memory
+81_03_01_00 // 01: R3 <- M[0001H]; load from data memory
+02_04_02_03 // 02: R4 <- R2 - R3; if there is carry, R3 is greater than R2 else R2 is greater than or equal to R2
+63_00_06_00 // 03: PC <- 0006H; if carry
+01_01_02_00 // 04: R1 <- R2 + R0; no carry, so R2 is greater and move to R1 (R0 is always 0)
+40_00_07_00 // 05: jump to store into data memory
+01_01_03_00 // 06: R1 <- R3 + R0; carry, so R3 is greater and move to R1
+82_01_02_00 // 07: M[0002H] <- R1; store maximum value into data memory
+
+```
+
+``data_memory.mem``
+```txt
+02
+01
+```
+
+![Fig: Processor Testbench Simulation Waveform for Jump](images/simulation/Processor_tb_jmp.png)
+
+``data_memory_dumped.txt``:
+```txt
+mem[0] = 02
+mem[1] = 01
+mem[2] = 02
+mem[3] = xx
+mem[4] = xx
+mem[5] = xx
+mem[6] = xx
+mem[7] = xx
+mem[8] = xx
+mem[9] = xx
+mem[a] = xx
+mem[b] = xx
+mem[c] = xx
+mem[d] = xx
+mem[e] = xx
+mem[f] = xx
+```

@@ -64,10 +64,10 @@ module CU (
     // main combinational logic
     always @(*) begin
         if (rst) begin
-            data_bus_write_enable_reg = 0;
-            rf_write_enable_reg = 0;
+            data_bus_write_enable_reg = 1'b0;
+            rf_write_enable_reg = 1'b0;
             jmp = 0;
-            alu_control_reg = 0;
+            alu_control_reg = 4'hf;
         end else begin
             // decode instruction
             opcode   = inst_bus[31:24];
@@ -82,8 +82,8 @@ module CU (
                 // op1=lower_data_addr, 
                 // op2=higher_data_addr]
                 8'b1000_0000: begin
-                    data_bus_write_enable_reg = 0;
-                    rf_write_enable_reg = 1;
+                    data_bus_write_enable_reg = 1'b0;
+                    rf_write_enable_reg = 1'b1;
                         
                     // read from data memory 
                     data_addr_bus_reg = {operand2, operand1};
@@ -98,8 +98,8 @@ module CU (
                 // op0=dest_reg, 
                 // op1=immediate_value]
                 8'b1000_0001: begin
-                    data_bus_write_enable_reg = 0;
-                    rf_write_enable_reg = 1;
+                    data_bus_write_enable_reg = 1'b0;
+                    rf_write_enable_reg = 1'b1;
                 
                     // write on register file
                     rf_write_addr_reg = operand0[3:0];
@@ -112,8 +112,8 @@ module CU (
                 // op1=lower_data_addr, 
                 // op2=higher_data_addr]
                 8'b1000_0010: begin
-                    data_bus_write_enable_reg = 1;
-                    rf_write_enable_reg = 0;
+                    data_bus_write_enable_reg = 1'b1;
+                    rf_write_enable_reg = 1'b0;
                         
                     // read data from src register
                     rf_read_addr1_reg = operand0;
@@ -128,8 +128,8 @@ module CU (
                 // op1=lower_data_addr, 
                 // op2=higher_data_addr]
                 8'b1000_0011: begin
-                    data_bus_write_enable_reg = 1;
-                    rf_write_enable_reg = 0;
+                    data_bus_write_enable_reg = 1'b1;
+                    rf_write_enable_reg = 1'b0;
                 
                     // write immediate to data memory
                     data_addr_bus_reg = {operand2, operand1};
@@ -141,12 +141,12 @@ module CU (
                 // oprand1=lower_inst_addr,
                 // operand2=higher_inst_addr]
                 8'b0100_0000: begin
-                    data_bus_write_enable_reg = 0;
-                    rf_write_enable_reg = 0;
+                    data_bus_write_enable_reg = 1'b0;
+                    rf_write_enable_reg = 1'b0;
                     
                     // jump address
                     jmp_pc = {operand2, operand1};
-                    jmp = 1;
+                    jmp = 1'b1;
                 end
                 
                 // jump on zero
@@ -154,32 +154,134 @@ module CU (
                 // oprand1=lower_inst_addr,
                 // operand2=higher_inst_addr]
                 8'b0110_0001: begin
-                    data_bus_write_enable_reg = 0;
-                    rf_write_enable_reg = 0;
+                    data_bus_write_enable_reg = 1'b0;
+                    rf_write_enable_reg = 1'b0;
                     
                     // read registers
                     if (alu_flag[`Zflag]) begin
                         jmp_pc = {operand2, operand1};
-                        jmp = 1;
+                        jmp = 1'b1;
                     end else begin
-                        jmp = 0;
+                        jmp = 1'b0;
+                    end   
+                end
+                
+                // jump on divided by zero
+                // [opcode=jmdz
+                // oprand1=lower_inst_addr,
+                // operand2=higher_inst_addr]
+                8'b0110_0010: begin
+                    data_bus_write_enable_reg = 1'b0;
+                    rf_write_enable_reg = 0;
+                    
+                    // read registers
+                    if (alu_flag[`Dflag]) begin
+                        jmp_pc = {operand2, operand1};
+                        jmp = 1'b1;
+                    end else begin
+                        jmp = 1'b0;
+                    end   
+                end
+                
+                // jump on carry
+                // [opcode=jmc
+                // oprand1=lower_inst_addr,
+                // operand2=higher_inst_addr]
+                8'b0110_0011: begin
+                    data_bus_write_enable_reg = 1'b0;
+                    rf_write_enable_reg = 1'b0;
+                    
+                    // read registers
+                    if (alu_flag[`Cflag]) begin
+                        jmp_pc = {operand2, operand1};
+                        jmp = 1'b1;
+                    end else begin
+                        jmp = 1'b0;
+                    end   
+                end
+                
+                // jump on divided by negative
+                // [opcode=jmn
+                // oprand1=lower_inst_addr,
+                // operand2=higher_inst_addr]
+                8'b0110_0100: begin
+                    data_bus_write_enable_reg = 1'b0;
+                    rf_write_enable_reg = 1'b0;
+                    
+                    // read registers
+                    if (alu_flag[`Sflag]) begin
+                        jmp_pc = {operand2, operand1};
+                        jmp = 1'b1;
+                    end else begin
+                        jmp = 1'b0;
                     end   
                 end
                 
                 // jump on not zero ...
-                // [opcode=jnz ...
+                // [opcode=jmnz ...
                 // oprand1=lower_inst_addr,
                 // operand2=higher_inst_addr]
                 8'b0111_0010: begin
-                    data_bus_write_enable_reg = 0;
-                    rf_write_enable_reg = 0;
+                    data_bus_write_enable_reg = 1'b0;
+                    rf_write_enable_reg = 1'b0;
                     
                     // read registers
                     if (!alu_flag[`Zflag]) begin
                         jmp_pc = {operand2, operand1};
-                        jmp = 1;
+                        jmp = 1'b1;
                     end else begin
-                        jmp = 0;
+                        jmp = 1'b0;
+                    end   
+                end
+                
+                // jump on not divided by zero ...
+                // [opcode=jmnd ...
+                // oprand1=lower_inst_addr,
+                // operand2=higher_inst_addr]
+                8'b0111_0010: begin
+                    data_bus_write_enable_reg = 1'b0;
+                    rf_write_enable_reg = 1'b0;
+                    
+                    // read registers
+                    if (!alu_flag[`Dflag]) begin
+                        jmp_pc = {operand2, operand1};
+                        jmp = 1'b1;
+                    end else begin
+                        jmp = 1'b0;
+                    end   
+                end
+                
+                // jump on not carry ...
+                // [opcode=jmnz ...
+                // oprand1=lower_inst_addr,
+                // operand2=higher_inst_addr]
+                8'b0111_0011: begin
+                    data_bus_write_enable_reg = 1'b0;
+                    rf_write_enable_reg = 1'b0;
+                    
+                    // read registers
+                    if (!alu_flag[`Cflag]) begin
+                        jmp_pc = {operand2, operand1};
+                        jmp = 1'b1;
+                    end else begin
+                        jmp = 1'b0;
+                    end   
+                end
+                
+                // jump on not negative (positive) ...
+                // [opcode=jmnn ...
+                // oprand1=lower_inst_addr,
+                // operand2=higher_inst_addr]
+                8'b0111_0010: begin
+                    data_bus_write_enable_reg = 1'b0;
+                    rf_write_enable_reg = 1'b0;
+                    
+                    // read registers
+                    if (!alu_flag[`Sflag]) begin
+                        jmp_pc = {operand2, operand1};
+                        jmp = 1'b1;
+                    end else begin
+                        jmp = 1'b0;
                     end   
                 end
                 
@@ -189,8 +291,8 @@ module CU (
                 // operand1=src_reg1
                 // operand2=src_reg2]
                 8'b0000_xxxx: begin
-                    data_bus_write_enable_reg = 0;
-                    rf_write_enable_reg = 1;
+                    data_bus_write_enable_reg = 1'b0;
+                    rf_write_enable_reg = 1'b1;
                     
                     // set read and write addresses of registers
                     rf_read_addr1_reg = operand1;
@@ -205,8 +307,8 @@ module CU (
                 end
                 
                 default: begin
-                    data_bus_write_enable_reg = 0;
-                    rf_write_enable_reg = 0;
+                    data_bus_write_enable_reg = 1'b0;
+                    rf_write_enable_reg = 1'b0;
                  end
             endcase
         end
