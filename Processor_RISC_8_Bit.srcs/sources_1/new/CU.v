@@ -57,7 +57,7 @@ module CU (
     assign alu_input_B = alu_input_B_reg;
 
     // handle read from inout bus
-    always @(data_bus_write_enable_reg or data_bus) begin
+    always @(data_bus_write_enable_reg, data_bus, data_addr_bus) begin
         if (!data_bus_write_enable_reg)
             data_bus_input_reg = data_bus;
     end    
@@ -334,7 +334,7 @@ module CU (
     end
     
     // PC update
-    always @(posedge clk or posedge rst) begin
+    always @(posedge clk, posedge rst) begin
         if (rst)
             pc <= 16'hffff;
         else if (hlt_reg)

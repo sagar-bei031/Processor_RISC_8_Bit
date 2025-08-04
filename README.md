@@ -15,23 +15,25 @@ A simple and minimal RISC style 8-bit processor using verilog and AMD Vivado.
 ## Design Modules
 
 ### Arithmetic Logic Unit (ALU)
-ALU performs the following arithmetic and logic operations:
+![Fig: ALU](images/diagram/ALU.png)
+
+ALU receives two 8-bit inputs named as A and B, performs arithmetic and logic operations based on 4-bit ALU control and provides 8-bit result. It also affects 4-bit flag based on operation. The operations performed by ALU are as follows:
 
 | ALU Control | Operation    | Result      |
 |-------------|--------------|-------------|
-| 00H         | No operation | Don't care  |
-| 01H         | Add          | A + B       |
-| 02H         | Subtract     | A - B       |
-| 03H         | Multiply     | A * B       |
-| 04H         | Divide       | A / B       |
-| 05H         | AND          | A & B       |
-| 06H         | OR           | A \| B      |
-| 07H         | XOR          | A ^ B       |
-| 08H         | Shift Left   | A << B      |
-| 09H         | Shift Right  | A >> B      |
-| FFH         | Reset flag   | 0           |
+| 0H          | No operation | Don't care  |
+| 1H          | Add          | A + B       |
+| 2H          | Subtract     | A - B       |
+| 3H          | Multiply     | A * B       |
+| 4H          | Divide       | A / B       |
+| 5H          | AND          | A & B       |
+| 6H          | OR           | A \| B      |
+| 7H          | XOR          | A ^ B       |
+| 8H          | Shift Left   | A << B      |
+| 9H          | Shift Right  | A >> B      |
+| FH          | Reset flag   | 0           |
 
-The ALU affects four bit flag register.
+The flag register is affected by every ALU operation except NOP. The structure of flag register is shown below:
 
 ![Fig: Four Bit Flag Register](images/diagram/Flag.png)
 
@@ -40,13 +42,11 @@ The ALU affects four bit flag register.
 - **Devided by Zero Flag [D]**: It is set if divider is zero.
 - **Zero**: It is set if result is zero.
 
-Every flag is affected in every ALU operations except NOP.
-
 ### Register File
 Register file contains eight registers (R0-R7) of 8-bit. Two registers can be read and one register can be written at the same time. The value of register R0 is always zero which help in move operation via ALU.
 
 ### Control Unit (CU)
-Control unit controls the signals such as ALU control, address buses, reset, write enable and so on. In one cycle, it reads instruction from external instruction memory, generate control signals and executes the operation. It consists program counter (PC) whic is incremented every cycle with exclusion of jump operation.
+Control unit controls the signals such as ALU control, address buses, reset, write enable and so on. In one cycle, it reads instruction from external instruction memory, generate control signals and executes the operation. It consists program counter (PC) whic is incremented every cycle with exclusion of jump operation and halt.
 
 
 ## Instruction Set
@@ -104,9 +104,9 @@ In data processing, the four LSB bits are assigned to ALU control.
 ## Simulation
 
 ### Simulation Modules
-- **Instruction Memory**: A simple read only memory to store instructions. The instructions are loaded from memory file "instruction_memory.mem".
+- **Instruction Memory**: A simple read only memory having 32-bit width to store instructions. The instructions are loaded from ``instruction_memory.mem`` memory file.
 
-- **Data Memory**: A simple read and write memory to store and read data. The initial data are loaded from memory file "data_memory.mem". At the end of simulation, the data memory is written to a file whose path is defined in header file "parameter.vh".
+- **Data Memory**: A simple read and write memory having 8-bit width to store and read data. The initial data are loaded from ``data_memory.mem`` memory file. At the end of simulation, the data memory is written to a file whose path is defined in header file ``parameter.vh``.
 
 ### Simulation Testbench Modules
 - **ALU Testbench**
