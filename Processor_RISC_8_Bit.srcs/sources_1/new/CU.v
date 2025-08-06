@@ -292,6 +292,13 @@ module CU (
                     end   
                 end
                 
+                // No operation (NOP)
+                8'b0000_0000: begin
+                    data_bus_write_enable_reg = 1'b0;
+                    rf_write_enable_reg = 1'b0;
+                    jmp_reg = 1'b0;
+                end
+                
                 // data processing
                 // [opcode=add,sub,mul,div, ...
                 // operand0=dest_reg,

@@ -1,6 +1,6 @@
 # Self Designed RISC Style 8-Bit Processor
 
-A simple and minimal RISC style 8-bit processor using verilog and AMD Vivado.
+A simple and minimal RISC style 8-bit processor using verilog and AMD Vivado (2025.1).
 
 
 ## Design
@@ -21,7 +21,6 @@ ALU receives two 8-bit inputs named as A and B, performs arithmetic and logic op
 
 | ALU Control | Operation    | Result      |
 |-------------|--------------|-------------|
-| 0H          | No operation | Don't care  |
 | 1H          | Add          | A + B       |
 | 2H          | Subtract     | A - B       |
 | 3H          | Multiply     | A * B       |
@@ -32,8 +31,9 @@ ALU receives two 8-bit inputs named as A and B, performs arithmetic and logic op
 | 8H          | Shift Left   | A << B      |
 | 9H          | Shift Right  | A >> B      |
 | FH          | Reset flag   | 0           |
+| Others      | Default case | 0           |
 
-The flag register is affected by every ALU operation except NOP. The structure of flag register is shown below:
+The flag register is affected by every ALU operation. The structure of flag register is shown below:
 
 ![Fig: Four Bit Flag Register](images/diagram/Flag.png)
 
@@ -60,7 +60,14 @@ One instruction size is four bytes containing 8-bit opcode and three 8-bit opera
 |-----------|-----------------------------|
 | 10XX_XXXX | Load and store register     |
 | 01XX_XXXX | Jump                        |
-| 00XX_XXXX | Data processing (use of ALU)|
+| 00XX_XXXX | Data processing (Use of ALU except 00H)|
+
+### Jump Instruction Types
+| Opcode    | Jump Type                          |
+|-----------|------------------------------------|
+| 0100_XXXX | Unconditional jump                 |
+| 0110_XXXX | Condtional jump on flag bit set    |
+| 0111_XXXX | Conditional jump on flag bit reset |
 
 In data processing, the four LSB bits are assigned to ALU control.
 
@@ -92,13 +99,6 @@ In data processing, the four LSB bits are assigned to ALU control.
 | 0000_1001 (09H) | Shift Right           | Destination register address | Source 1 register address | Source 2 register address  |
 | 0000_1111 (0FH) | Reset flag (0001)     | Don't care                   | Don't care                | Don't care                 |
 | 1100_0000 (C0H) | Halt                  | Don't care                   | Don't care                | Don't care                 |
-
-### Jump Instruction Types
-| Opcode    | Jump Type                          |
-|-----------|------------------------------------|
-| 0100_XXXX | Unconditional jump                 |
-| 0110_XXXX | Condtional jump on flag bit set    |
-| 0111_XXXX | Conditional jump on flag bit reset |
 
 
 ## Simulation

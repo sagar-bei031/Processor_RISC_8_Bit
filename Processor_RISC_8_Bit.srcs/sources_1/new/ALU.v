@@ -16,12 +16,7 @@ assign result = result_reg;
 assign flag = flag_reg;
 
 always @(*) begin
-    case (control)
-        // NOP
-        4'h0: begin
-            // Do nothing
-        end
-    
+    case (control)    
         // add
         4'h1: begin
             {flag_reg[`Cflag], result_reg} = input_A + input_B; 
